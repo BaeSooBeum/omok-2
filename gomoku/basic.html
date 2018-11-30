@@ -3,12 +3,12 @@
 <head>
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script src="./js/request.js"></script>
-  
+
   <style type="text/css">
-  
+
     body {width: 100%;}
     #boardWraaper {text-align: center;}
-  
+
   </style>
 
 </head>
@@ -22,8 +22,23 @@
 <!--바둑판-->
 <script type="text/javascript" src="./js/basic.js"></script>
 <!--Restart버튼-->
-<button type="button">Restart</button>
+<input type="button" id="button1" onclick= "restart();" value="Restart" />
+<script>
+function restart() {
+	var c;
+  c = confirm("정말로 게임을 다시 시작하시겠습니까?");
+  if(c)
+  {
+    history.go(0)
+  }
+}
+</script>
 <!--Undo버튼-->
-<button type="button">Undo</button>
+<input type="button" id="button1" onclick="button1_click();" value="Undo" />
+<script>
+function button1_click() {
+	alert("버튼1을 누르셨습니다.");
+}
+</script>
 
 </html>
