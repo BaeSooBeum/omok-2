@@ -2,14 +2,8 @@
 
 <head>
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-  <script src="./js/request.js"></script>
-
-  <style type="text/css">
-
-    body {width: 100%;}
-    #boardWraaper {text-align: center;}
-
-  </style>
+  <link rel="stylesheet" type="text/css" href="./css/style.css" />
+  
 
 </head>
 
@@ -17,10 +11,25 @@
   <div id="boardWraaper">
   	<canvas id="board" width="600" height="600"></canvas>
   </div>
+  <!-- Trigger/Open The Modal -->
+  <button id="myBtn">Open Modal</button>
+ 
+  <!-- The Modal -->
+  <div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>                                                               
+      <p>Some text in the Modal..</p>
+    </div>
+
+  </div>
+
 </body>
 
 <!--바둑판-->
-<script type="text/javascript" src="./js/basic.js></script>
+<script type="text/javascript" src="./js/basic.js"></script>
+<script type="text/javascript" src="./js/modal.js"></script>
 <!--Restart버튼-->
 <input type="button" id="button1" onclick= "restart()" value="Restart" />
 <script>

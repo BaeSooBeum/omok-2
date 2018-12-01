@@ -5,6 +5,10 @@ var height = 600;
 var radius = 14;
 var blank = 12;
 var turn = 1; // 1 black 2 white
+var chk = {
+	1 : 0,
+	2 : 0
+}
 
 // 오목판의 사이즈는 19 * 19
 // 배열의 값의 0=비었음, 1=검은돌, 2=흰돌
@@ -148,12 +152,24 @@ function isClicked(xPos, yPos){
 
 /* is Omok?? */
 function checkOmok(turn, xPos, yPos){
-	if ((addOmok(turn, xPos, yPos, -1, -1) + addOmok(turn, xPos, yPos, 1, 1) == 4)&&(addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4)) alert("end");
-	if ((addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4)&&(addOmok(turn, xPos, yPos, 1, -1) + addOmok(turn, xPos, yPos, -1, 1) == 4)) alert("end");
-	if ((addOmok(turn, xPos, yPos, 1, -1) + addOmok(turn, xPos, yPos, -1, 1) == 4)&&(addOmok(turn, xPos, yPos, -1, 0) + addOmok(turn, xPos, yPos, 1, 0) == 4)) alert("end");
-	if ((addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4)&&(addOmok(turn, xPos, yPos, 1, -1) + addOmok(turn, xPos, yPos, -1, 1) == 4)) alert("end");
-	if ((addOmok(turn, xPos, yPos, -1, 0) + addOmok(turn, xPos, yPos, 1, 0) == 4)&&(addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4)) alert("end");
-	if ((addOmok(turn, xPos, yPos, 1, -1) + addOmok(turn, xPos, yPos, -1, 1) == 4)&&(addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4)) alert("end");
+	if (addOmok(turn, xPos, yPos, -1, -1) + addOmok(turn, xPos, yPos, 1, 1) == 4) chk[turn]++;
+	if (addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4) chk[turn]++;
+	if (addOmok(turn, xPos, yPos, 1, -1) + addOmok(turn, xPos, yPos, -1, 1) == 4) chk[turn]++;
+	if (addOmok(turn, xPos, yPos, -1, 0) + addOmok(turn, xPos, yPos, 1, 0) == 4) chk[turn]++;
+
+	if(chk[1] > 1) {
+		if (addOmok(turn, xPos, yPos, -1, -1) + addOmok(turn, xPos, yPos, 1, 1) == 4) $("#myModal").attr("style", "display:block");
+		if (addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4) $("#myModal").attr("style", "display:block");
+		if (addOmok(turn, xPos, yPos, 1, -1) + addOmok(turn, xPos, yPos, -1, 1) == 4) $("#myModal").attr("style", "display:block");
+		if (addOmok(turn, xPos, yPos, -1, 0) + addOmok(turn, xPos, yPos, 1, 0) == 4) $("#myModal").attr("style", "display:block");
+	}
+
+	if(chk[2] > 1) {
+		if (addOmok(turn, xPos, yPos, -1, -1) + addOmok(turn, xPos, yPos, 1, 1) == 4) alert("White Win!");
+		if (addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4) alert("White Win!");
+		if (addOmok(turn, xPos, yPos, 1, -1) + addOmok(turn, xPos, yPos, -1, 1) == 4) alert("White Win!");
+		if (addOmok(turn, xPos, yPos, -1, 0) + addOmok(turn, xPos, yPos, 1, 0) == 4) alert("White Win!");
+	}
 }
 
 function addOmok(turn, xPos, yPos, xDir, yDir){
