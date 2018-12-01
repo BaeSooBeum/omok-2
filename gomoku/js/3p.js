@@ -5,6 +5,9 @@ var height = 600;
 var radius = 14;
 var blank = 12;
 var turn = 1; // 1 black 2 white 3 gray 턴이 바뀔때마다 1은 흑돌 2는 백돌 3은 회돌로 돌아가며 수를 둔다.
+var end = 0;
+var latestX = 0;
+var latestY = 0;
 
 // 오목판의 사이즈는 19 * 19
 // 배열의 값의 0=비었음, 1=검은돌, 2=흰돌
@@ -149,16 +152,35 @@ function isClicked(xPos, yPos){ // 클릭했을때 턴을 변경해주는 함수
 		if (turn == 1) turn = 2;
 		else if (turn == 2) turn = 3;
 		else if (turn == 3) turn = 1; //turn change
+		latestX = resultPos.x;
+		latestY = resultPos.y;
 	}
 	updateBoard();
 }
 
 /* is Omok?? */
 function checkOmok(turn, xPos, yPos){ //오목인지 체크해준다. 배열을 체크해 같은 돌의 색을 체크한다.
-	if (addOmok(turn, xPos, yPos, -1, -1) + addOmok(turn, xPos, yPos, 1, 1) == 4) alert("end");
-	if (addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4) alert("end");
-	if (addOmok(turn, xPos, yPos, 1, -1) + addOmok(turn, xPos, yPos, -1, 1) == 4) alert("end");
-	if (addOmok(turn, xPos, yPos, -1, 0) + addOmok(turn, xPos, yPos, 1, 0) == 4) alert("end");
+	if (addOmok(turn, xPos, yPos, -1, -1) + addOmok(turn, xPos, yPos, 1, 1) == 4) end = 1;
+	if (addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4) end = 1;
+	if (addOmok(turn, xPos, yPos, 1, -1) + addOmok(turn, xPos, yPos, -1, 1) == 4) end = 1;
+	if (addOmok(turn, xPos, yPos, -1, 0) + addOmok(turn, xPos, yPos, 1, 0) == 4) end = 1;
+
+	if(turn == 1) {
+		if (end == 1) {
+			$("#myModal").attr("style", "display:block");
+			$("#myModal").find(".msg").text("Black Win!");
+		}
+	} else if (turn == 2) {
+		if (end == 1) {
+			$("#myModal").attr("style", "display:block");
+			$("#myModal").find(".msg").text("White Win!");
+		}
+	} else if (turn == 3) {
+		if (end == 1) {
+			$("#myModal").attr("style", "display:block");
+			$("#myModal").find(".msg").text("Gray Win!");
+		}
+	}
 }
 
 function addOmok(turn, xPos, yPos, xDir, yDir){
@@ -172,4 +194,10 @@ function addOmok(turn, xPos, yPos, xDir, yDir){
 	} else {
 		return 0;
 	}
+}
+
+function undo() {
+	boardArray[latestX][latestY] = 0;
+	turn = 4 - turn;
+    updateBoard();
 }

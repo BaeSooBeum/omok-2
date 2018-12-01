@@ -3,6 +3,8 @@
 <head>
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <link rel="stylesheet" type="text/css" href="./css/style.css" />
+  <meta charset="utf-8">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
   <style type="text/css">
 
@@ -22,35 +24,23 @@
   <div id="myModal" class="modal">
 
     <!-- Modal content -->
-    <div class="modal-content">
-      <span class="close">&times;</span>                                                               
-      <p>Some text in the Modal..</p>
+    <div class="modal-content">                                                              
+      <h1 class="msg"></h1>
+
+      <button class="mainBtn" onClick="window.location.reload()">다시하기</button>
+      <button class="mainBtn" onClick="location.href='../index.html'">룰 선택</button>
     </div>
 
   </div>
 </body>
 
 <!--바둑판-->
-<script type="text/javascript" src="./js/double.js"></script>
-<script type="text/javascript" src="./js/modal.js"></script>
-<!--Restart버튼-->
-<input type="button" id="button1" onclick= "restart()" value="Restart" />
-<script>
-function restart() {
-	var c;
-  c = confirm("정말로 게임을 다시 시작하시겠습니까?");
-  if(c)
-  {
-    history.go(0)
-  }
-}
-</script>
-<!--Undo버튼-->
-<input type="button" id="button1" onclick="button1_click();" value="Undo" />
-<script>
-function button1_click() {
-	alert("버튼1을 누르셨습니다.");
-}
-</script>
+<script type="text/javascript" src="./js/double.js" charset="UTF-8"></script>
 
+<div class="btnArea">
+  <!--Restart버튼-->
+  <button type="button" class="btn btn-warning" onClick="window.location.reload()">다시하기</button>
+  <!--Undo버튼-->
+  <button class="btn btn-warning" onClick="undo()">1회 되돌리기</button>
+</div>
 </html>
