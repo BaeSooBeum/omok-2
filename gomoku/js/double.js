@@ -146,7 +146,7 @@ function isClicked(xPos, yPos){
 	updateBoard();
 }
 
-/* is Omok?? */
+/* is Omok?? */ /*오목 승리조건 체크 함수*/
 function checkOmok(turn, xPos, yPos){
 	if ((addOmok(turn, xPos, yPos, -1, -1) + addOmok(turn, xPos, yPos, 1, 1) == 4)&&(addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4)) alert("end");
 	if ((addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4)&&(addOmok(turn, xPos, yPos, 1, -1) + addOmok(turn, xPos, yPos, -1, 1) == 4)) alert("end");
@@ -157,7 +157,7 @@ function checkOmok(turn, xPos, yPos){
 }
 
 function addOmok(turn, xPos, yPos, xDir, yDir){
-	if (xPos + xDir < 0) return 0;
+	if (xPos + xDir < 0) return 0;F
 	if (xPos + xDir > 18) return 0;
 	if (yPos + yDir < 0) return 0;
 	if (yPos + yDir > 18) return 0;
