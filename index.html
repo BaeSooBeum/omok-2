@@ -33,25 +33,25 @@
         $(document).ready(function() {
             
             $("button").click(function() {
-                location.href="gomoku/" + $(this).attr("id") + ".html"
+                location.href="./gomoku" + $(this).attr("id") + ".html"
             });
         })
     </script>
 
     <div class="container">
         <div class="menu">
-            <h1>보.겜.천</h1>
+            <h1>룰 선택</h1>
             <div class="btn">
-                <button id="gomoku">오목</button>
+                <button id="4moku">사목</button>
             </div>
             <div class="btn">
-                <button>미정</button>
+                <button id="double">더블오목</button>
             </div>
             <div class="btn">
-                <button>미정</button>
+                <button id="3pGomoku">삼인오목</button>
             </div>
             <div class="btn">
-                <button>미정</button>
+                <button id="basic">기본오목</button>
             </div>
         </div>
     </div>

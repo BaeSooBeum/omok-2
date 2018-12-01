@@ -6,6 +6,8 @@ var radius = 14;
 var blank = 12;
 var turn = 1; // 1 black 2 white 3 gray 턴이 바뀔때마다 1은 흑돌 2는 백돌 3은 회돌로 돌아가며 수를 둔다.
 
+// 오목판의 사이즈는 19 * 19
+// 배열의 값의 0=비었음, 1=검은돌, 2=흰돌
 var boardArray = new Array(19); 
 for (var i = 0; i < 19; i++) {
     boardArray[i] = new Array(19);
@@ -14,15 +16,16 @@ for (var i = 0; i < 19; i++) {
 	}
 }
 
+// 보드판에 돌을 업
 function updateBoard(){
 	// board fill color
-	ctx.fillStyle="#ffcc66";
-	ctx.fillRect(0, 0, width, height);
+	ctx.fillStyle="#ffcc66";				//윤곽선의 색 설정
+	ctx.fillRect(0, 0, width, height);		//(0,0)과 (width, height)를 대각 꼭지점으로 갖는 사각형을 만든다.
 
 	// board draw line
-	ctx.strokeStyle="#333300";
-	ctx.fillStyle="#333300";
-	for (i = 0; i < 19; i++) { 
+	ctx.strokeStyle="#333300";				//도형의 색 설정
+	ctx.fillStyle="#333300";				//윤곽선의 색 설정
+	for (i = 0; i < 19; i++) { 				//바둑판의 선을 그어주는 반복문
 		// horizontal line draw
 		ctx.beginPath();
 		ctx.moveTo(blank + i * 32, blank);
