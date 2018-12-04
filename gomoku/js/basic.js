@@ -7,6 +7,9 @@ var height = 600;
 var radius = 14;
 var blank = 12;
 var turn = 1; // 1 black 2 white
+var end = 0;
+var latestX = 0;
+var latestY = 0;
 
 // 오목판의 사이즈는 19 * 19
 // 배열의 값의 0=비었음, 1=검은돌, 2=흰돌
@@ -145,9 +148,17 @@ function isClicked(xPos, yPos){
 	resultPos = getMouseRoundPos(xPos, yPos);									// 마우스로 클릭한 곳에 맞는 바둑알의 위치를 얻는다.
 	if (resultPos.x > -1 && resultPos.x < 19 && resultPos.y > -1				// 만약 클릭한 곳의 x,y가 바둑판 배열안에 포함되고, 놓여진 돌이 없으면		
 	 && resultPos.y < 19 && boardArray[resultPos.x][resultPos.y] == 0){
+<<<<<<< HEAD
 		boardArray[resultPos.x][resultPos.y] = turn;							// 바둑판 관리 배열에 해당위치에 돌이 놓여진 것으로 설정한다.
 		checkOmok(turn, resultPos.x, resultPos.y);								// 오목 규칙에 의해 게임이 종료되었느지 확인하고 해당 함수에서 종료되면 종료 메시지 보임
 		turn = 3 - turn; //turn change											// 다음 턴 돌의 차례로 바꿈
+=======
+		boardArray[resultPos.x][resultPos.y] = turn;
+		checkOmok(turn, resultPos.x, resultPos.y);
+		turn = 3 - turn; //turn change
+		latestX = resultPos.x;
+		latestY = resultPos.y;
+>>>>>>> 529ba01049b1a443a9503d4cf2bd2a35e57730d5
 	}
 	updateBoard();
 }
@@ -155,10 +166,29 @@ function isClicked(xPos, yPos){
 /* is Omok?? */
 // 승리조건 판정 함수수
 function checkOmok(turn, xPos, yPos){
+<<<<<<< HEAD
 	if (addOmok(turn, xPos, yPos, -1, -1) + addOmok(turn, xPos, yPos, 1, 1) == 4) alert("end");			// 우상향~좌하향 대각으로 돌이 연속한지 확인
 	if (addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4) alert("end");			// 상하 방향으로 돌이 연속한지 확인 
 	if (addOmok(turn, xPos, yPos, 1, -1) + addOmok(turn, xPos, yPos, -1, 1) == 4) alert("end");			// 우하향~좌상향 대각으로 돌이 연속한지 확인
 	if (addOmok(turn, xPos, yPos, -1, 0) + addOmok(turn, xPos, yPos, 1, 0) == 4) alert("end");			// 좌우 방향으로 돌이 연속한지 확인
+=======
+	if (addOmok(turn, xPos, yPos, -1, -1) + addOmok(turn, xPos, yPos, 1, 1) == 4) end = 1;
+	if (addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4) end = 1;
+	if (addOmok(turn, xPos, yPos, 1, -1) + addOmok(turn, xPos, yPos, -1, 1) == 4) end = 1;
+	if (addOmok(turn, xPos, yPos, -1, 0) + addOmok(turn, xPos, yPos, 1, 0) == 4) end = 1;
+
+	if(turn == 1) {
+		if (end == 1) {
+			$("#myModal").attr("style", "display:block");
+			$("#myModal").find(".msg").text("Black Win!");
+		}
+	} else if (turn == 2) {
+		if (end == 1) {
+			$("#myModal").attr("style", "display:block");
+			$("#myModal").find(".msg").text("White Win!");
+		}
+	}
+>>>>>>> 529ba01049b1a443a9503d4cf2bd2a35e57730d5
 }
 
 // xPos, yPos 기준으로 xDir, yDir 만큼 위치를 옮기며 연속된 돌 갯수 세기 함수
@@ -175,4 +205,10 @@ function addOmok(turn, xPos, yPos, xDir, yDir){
 	} else {
 		return 0;
 	}
+}
+
+function undo() {
+	boardArray[latestX][latestY] = 0;
+	turn = 3 - turn;
+    updateBoard();
 }

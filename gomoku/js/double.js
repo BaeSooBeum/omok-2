@@ -4,14 +4,18 @@ var width = 600;
 var height = 600;
 var radius = 14;
 var blank = 12;
-var turn = 1; // 1 black 2 white 3 gray 턴이 바뀔때마다 1은 흑돌 2는 백돌 3은 회돌로 돌아가며 수를 둔다.
+var turn = 1; // 1 black 2 white
+var chk = {
+	1 : 0,
+	2 : 0
+}
 var end = 0;
 var latestX = 0;
 var latestY = 0;
 
 // 오목판의 사이즈는 19 * 19
 // 배열의 값의 0=비었음, 1=검은돌, 2=흰돌
-var boardArray = new Array(19); 
+var boardArray = new Array(19); 			
 for (var i = 0; i < 19; i++) {
     boardArray[i] = new Array(19);
     for (j = 0; j < 19; j++) { 
@@ -25,6 +29,7 @@ function updateBoard(){
 	ctx.fillStyle="#ffcc66";				//윤곽선의 색 설정
 	ctx.fillRect(0, 0, width, height);		//(0,0)과 (width, height)를 대각 꼭지점으로 갖는 사각형을 만든다.
 
+	// 게임 Map인 바둑판을 그리는 부분
 	// board draw line
 	ctx.strokeStyle="#333300";				//도형의 색 설정
 	ctx.fillStyle="#333300";				//윤곽선의 색 설정
@@ -42,6 +47,9 @@ function updateBoard(){
 		ctx.stroke();
 	}
 
+
+	// 여기부터 주석 추가 필요 #########################################################################3
+	
 	// board draw point
 	var circleRadius = 3;
 	for (i = 0; i < 3; i++) { 
@@ -54,7 +62,8 @@ function updateBoard(){
 		}
 	}
 
-	// board draw clicked 보드를 클릭했을때 어떻게 표시할지 그리고 배열에 몇을 저장할지 정해주는 반복문
+
+	// board draw clicked
 	for (i = 0; i < 19; i++) { 
 		for (j = 0; j < 19; j++) {
 			if (boardArray[i][j] == 1) {
@@ -68,13 +77,6 @@ function updateBoard(){
 				ctx.beginPath();
 				ctx.strokeStyle="#ffffff";
 				ctx.fillStyle="#ffffff";
-				ctx.arc(blank + i * 32, blank + j * 32, radius, 0, 2*Math.PI);
-				ctx.fill();
-				ctx.stroke();
-			} else if (boardArray[i][j] == 3){
-				ctx.beginPath();
-				ctx.strokeStyle="#888888";
-				ctx.fillStyle="#888888";
 				ctx.arc(blank + i * 32, blank + j * 32, radius, 0, 2*Math.PI);
 				ctx.fill();
 				ctx.stroke();
@@ -118,7 +120,7 @@ c.addEventListener('mousedown', function(evt) {
 	isClicked(mousePos.x, mousePos.y);
 }, false);
 
-function drawNotClicked(xPos, yPos){ // 마우스 클릭을 하기전에 마우스 포인터를 가져다 놓으면 놓을 돌의 색상을 흐릿하게 보여줌
+function drawNotClicked(xPos, yPos){
 	resultPos = getMouseRoundPos(xPos, yPos);
 
 	if (resultPos.x > -1 && resultPos.x < 19 && resultPos.y > -1
@@ -126,15 +128,12 @@ function drawNotClicked(xPos, yPos){ // 마우스 클릭을 하기전에 마우�
 		updateBoard();
 		ctx.beginPath();
 		ctx.globalAlpha=0.8;
-		if (turn == 1) {
+		if (turn < 2) {
 			ctx.strokeStyle="#000000";
 			ctx.fillStyle="#000000";
-		} else if (turn == 2){
+		} else {
 			ctx.strokeStyle="#ffffff";
 			ctx.fillStyle="#ffffff";	
-		} else if (turn == 3){
-			ctx.strokeStyle="#888888";
-			ctx.fillStyle="#888888";	
 		}
 		ctx.arc(blank + resultPos.x * 32, blank + resultPos.y * 32, radius, 0, 2*Math.PI);
 		ctx.fill();
@@ -143,15 +142,13 @@ function drawNotClicked(xPos, yPos){ // 마우스 클릭을 하기전에 마우�
 	}
 };
 
-function isClicked(xPos, yPos){ // 클릭했을때 턴을 변경해주는 함수
+function isClicked(xPos, yPos){
 	resultPos = getMouseRoundPos(xPos, yPos);
 	if (resultPos.x > -1 && resultPos.x < 19 && resultPos.y > -1
 	 && resultPos.y < 19 && boardArray[resultPos.x][resultPos.y] == 0){
 		boardArray[resultPos.x][resultPos.y] = turn;
 		checkOmok(turn, resultPos.x, resultPos.y);
-		if (turn == 1) turn = 2;
-		else if (turn == 2) turn = 3;
-		else if (turn == 3) turn = 1; //turn change
+		turn = 3 - turn; //turn change
 		latestX = resultPos.x;
 		latestY = resultPos.y;
 	}
@@ -159,26 +156,33 @@ function isClicked(xPos, yPos){ // 클릭했을때 턴을 변경해주는 함수
 }
 
 /* is Omok?? */
-function checkOmok(turn, xPos, yPos){ //오목인지 체크해준다. 배열을 체크해 같은 돌의 색을 체크한다.
-	if (addOmok(turn, xPos, yPos, -1, -1) + addOmok(turn, xPos, yPos, 1, 1) == 4) end = 1;
-	if (addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4) end = 1;
-	if (addOmok(turn, xPos, yPos, 1, -1) + addOmok(turn, xPos, yPos, -1, 1) == 4) end = 1;
-	if (addOmok(turn, xPos, yPos, -1, 0) + addOmok(turn, xPos, yPos, 1, 0) == 4) end = 1;
+function checkOmok(turn, xPos, yPos){
+	if (addOmok(turn, xPos, yPos, -1, -1) + addOmok(turn, xPos, yPos, 1, 1) == 4) chk[turn]++;
+	if (addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4) chk[turn]++;
+	if (addOmok(turn, xPos, yPos, 1, -1) + addOmok(turn, xPos, yPos, -1, 1) == 4) chk[turn]++;
+	if (addOmok(turn, xPos, yPos, -1, 0) + addOmok(turn, xPos, yPos, 1, 0) == 4) chk[turn]++;
 
-	if(turn == 1) {
+	if(chk[1] > 1) {
+		if (addOmok(turn, xPos, yPos, -1, -1) + addOmok(turn, xPos, yPos, 1, 1) == 4) end = 1;
+		if (addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4) end = 1;
+		if (addOmok(turn, xPos, yPos, 1, -1) + addOmok(turn, xPos, yPos, -1, 1) == 4) end = 1;
+		if (addOmok(turn, xPos, yPos, -1, 0) + addOmok(turn, xPos, yPos, 1, 0) == 4) end = 1;
+
 		if (end == 1) {
 			$("#myModal").attr("style", "display:block");
 			$("#myModal").find(".msg").text("Black Win!");
 		}
-	} else if (turn == 2) {
+	}
+
+	if(chk[2] > 1) {
+		if (addOmok(turn, xPos, yPos, -1, -1) + addOmok(turn, xPos, yPos, 1, 1) == 4) end = 1;
+		if (addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4) end = 1;
+		if (addOmok(turn, xPos, yPos, 1, -1) + addOmok(turn, xPos, yPos, -1, 1) == 4) end = 1;
+		if (addOmok(turn, xPos, yPos, -1, 0) + addOmok(turn, xPos, yPos, 1, 0) == 4) end = 1;
+
 		if (end == 1) {
 			$("#myModal").attr("style", "display:block");
 			$("#myModal").find(".msg").text("White Win!");
-		}
-	} else if (turn == 3) {
-		if (end == 1) {
-			$("#myModal").attr("style", "display:block");
-			$("#myModal").find(".msg").text("Gray Win!");
 		}
 	}
 }
@@ -198,8 +202,6 @@ function addOmok(turn, xPos, yPos, xDir, yDir){
 
 function undo() {
 	boardArray[latestX][latestY] = 0;
-	if (turn == 1) turn = 3;
-	else if (turn == 2) turn = 1;
-	else if (turn == 3) turn = 2; //turn change
+	turn = 3 - turn;
     updateBoard();
 }
