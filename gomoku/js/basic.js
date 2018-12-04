@@ -1,3 +1,5 @@
+// 코드 주석 : 배수범
+
 var c = document.getElementById("board");
 var ctx = c.getContext("2d");
 var width = 600;
@@ -16,7 +18,7 @@ for (var i = 0; i < 19; i++) {
 	}
 }
 
-// 보드판에 돌을 업
+// 바둑판 그리기
 function updateBoard(){
 	// board fill color
 	ctx.fillStyle="#ffcc66";				//윤곽선의 색 설정
@@ -40,9 +42,6 @@ function updateBoard(){
 		ctx.stroke();
 	}
 
-
-	// 여기부터 주석 추가 필요 #########################################################################3
-	
 	// board draw point
 	var circleRadius = 3;
 	for (i = 0; i < 3; i++) { 
@@ -56,7 +55,8 @@ function updateBoard(){
 	}
 
 
-	// board draw clicked
+	// boardArray는 현재 바둑알이 놓여진 상황을 나태내는 배열
+	// 이 배열에 맞게 바둑알을 그린다.
 	for (i = 0; i < 19; i++) { 
 		for (j = 0; j < 19; j++) {
 			if (boardArray[i][j] == 1) {
@@ -83,6 +83,7 @@ function updateBoard(){
 updateBoard();
 
 /* Mouse Event */
+// 마우스위 위치를 얻는것.
 function getMousePos(canvas, evt) {
 	var rect = canvas.getBoundingClientRect();
 	return {
@@ -91,6 +92,8 @@ function getMousePos(canvas, evt) {
 	};
 }
 
+// 마우스위 위치는 바둑판위에 돌 한칸한칸 위치로 얻어지지 않음
+// 따라서 마우스 위치 정보를 바둑판의 어느칸인지 변환할 필요가 있음.
 function getMouseRoundPos(xPos, yPos){
 	var x = (xPos - blank) / 32;
 	var resultX = Math.round(x);
@@ -103,6 +106,7 @@ function getMouseRoundPos(xPos, yPos){
 	};
 }
 
+// 마우스 이벤트 처리 리스너
 c.addEventListener('mousemove', function(evt) {
 	var mousePos = getMousePos(c, evt);
 	drawNotClicked(mousePos.x, mousePos.y);
@@ -113,53 +117,59 @@ c.addEventListener('mousedown', function(evt) {
 	isClicked(mousePos.x, mousePos.y);
 }, false);
 
+// 클릭하지 않고 마우스만 바둑판에 가져가도 흐릿하게 놓여진 돌의 모습을 미리 보여주는 함수
 function drawNotClicked(xPos, yPos){
-	resultPos = getMouseRoundPos(xPos, yPos);
+	resultPos = getMouseRoundPos(xPos, yPos);									// 마우스의 위치를 얻어옴
 
-	if (resultPos.x > -1 && resultPos.x < 19 && resultPos.y > -1
+	if (resultPos.x > -1 && resultPos.x < 19 && resultPos.y > -1				// 마우스 커서가 바둑판 내에 위치하고, 놓여진 돌이 없는 곳이면
 	 && resultPos.y < 19 && boardArray[resultPos.x][resultPos.y] == 0){
-		updateBoard();
+		updateBoard();															// 바둑판을 최신상태로 그리고
 		ctx.beginPath();
 		ctx.globalAlpha=0.8;
-		if (turn < 2) {
+		if (turn < 2) {															// 순서에따라 돌의 색 지정해서
 			ctx.strokeStyle="#000000";
 			ctx.fillStyle="#000000";
 		} else {
 			ctx.strokeStyle="#ffffff";
 			ctx.fillStyle="#ffffff";	
 		}
-		ctx.arc(blank + resultPos.x * 32, blank + resultPos.y * 32, radius, 0, 2*Math.PI);
+		ctx.arc(blank + resultPos.x * 32, blank + resultPos.y * 32, radius, 0, 2*Math.PI);		// 흐릿하게 돌을 그림
 		ctx.fill();
 		ctx.stroke();
 		ctx.globalAlpha=1;
 	}
 };
 
+// 마우스로 클릭하면 해당칸에 맞게 오목알을 그리는 함수
 function isClicked(xPos, yPos){
-	resultPos = getMouseRoundPos(xPos, yPos);
-	if (resultPos.x > -1 && resultPos.x < 19 && resultPos.y > -1
+	resultPos = getMouseRoundPos(xPos, yPos);									// 마우스로 클릭한 곳에 맞는 바둑알의 위치를 얻는다.
+	if (resultPos.x > -1 && resultPos.x < 19 && resultPos.y > -1				// 만약 클릭한 곳의 x,y가 바둑판 배열안에 포함되고, 놓여진 돌이 없으면		
 	 && resultPos.y < 19 && boardArray[resultPos.x][resultPos.y] == 0){
-		boardArray[resultPos.x][resultPos.y] = turn;
-		checkOmok(turn, resultPos.x, resultPos.y);
-		turn = 3 - turn; //turn change
+		boardArray[resultPos.x][resultPos.y] = turn;							// 바둑판 관리 배열에 해당위치에 돌이 놓여진 것으로 설정한다.
+		checkOmok(turn, resultPos.x, resultPos.y);								// 오목 규칙에 의해 게임이 종료되었느지 확인하고 해당 함수에서 종료되면 종료 메시지 보임
+		turn = 3 - turn; //turn change											// 다음 턴 돌의 차례로 바꿈
 	}
 	updateBoard();
 }
 
 /* is Omok?? */
+// 승리조건 판정 함수수
 function checkOmok(turn, xPos, yPos){
-	if (addOmok(turn, xPos, yPos, -1, -1) + addOmok(turn, xPos, yPos, 1, 1) == 4) alert("end");
-	if (addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4) alert("end");
-	if (addOmok(turn, xPos, yPos, 1, -1) + addOmok(turn, xPos, yPos, -1, 1) == 4) alert("end");
-	if (addOmok(turn, xPos, yPos, -1, 0) + addOmok(turn, xPos, yPos, 1, 0) == 4) alert("end");
+	if (addOmok(turn, xPos, yPos, -1, -1) + addOmok(turn, xPos, yPos, 1, 1) == 4) alert("end");			// 우상향~좌하향 대각으로 돌이 연속한지 확인
+	if (addOmok(turn, xPos, yPos, 0, -1) + addOmok(turn, xPos, yPos, 0, 1) == 4) alert("end");			// 상하 방향으로 돌이 연속한지 확인 
+	if (addOmok(turn, xPos, yPos, 1, -1) + addOmok(turn, xPos, yPos, -1, 1) == 4) alert("end");			// 우하향~좌상향 대각으로 돌이 연속한지 확인
+	if (addOmok(turn, xPos, yPos, -1, 0) + addOmok(turn, xPos, yPos, 1, 0) == 4) alert("end");			// 좌우 방향으로 돌이 연속한지 확인
 }
 
+// xPos, yPos 기준으로 xDir, yDir 만큼 위치를 옮기며 연속된 돌 갯수 세기 함수
 function addOmok(turn, xPos, yPos, xDir, yDir){
-	if (xPos + xDir < 0) return 0;
-	if (xPos + xDir > 18) return 0;
-	if (yPos + yDir < 0) return 0;
-	if (yPos + yDir > 18) return 0;
+	// 체크하는 위치가 바둑판 밭이면 연속된 돌카운트를 0으로 반환한다.
+	if (xPos + xDir < 0) return 0;			
+	if (xPos + xDir > 18) return 0;			 
+	if (yPos + yDir < 0) return 0;			 
+	if (yPos + yDir > 18) return 0;			 
 
+	// 만약 체크하는 위치에 내가 원하는 turn(유저)의 돌이 있으면, 연속된 될 카운트 +1하고, 같은 방향으로 추가로 확인한다.
 	if (boardArray[xPos + xDir][yPos + yDir] == turn) {
 		return 1 + addOmok(turn, xPos + xDir, yPos + yDir, xDir, yDir);
 	} else {
