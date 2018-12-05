@@ -52,13 +52,7 @@
     $('#message').text('Choose your move.');
     gameTree.moves.forEach(function (m, i) {
       if (m.isPassingMove) {
-        $('#console').append(
-          $('<input type="button" class="btn">')
-          .val(O.nameMove(m))
-          .click(function () {
-            shiftToNewGameTree(O.force(m.gameTreePromise));
-          })
-        );
+        showWinner(gameTree.board);
       } else {
         $('#cell_' + m.x + '_' + m.y)
         .click(function () {
@@ -74,33 +68,12 @@
       startNewGame();
   }
 
-  var minimumDelayForAI = 500;  // milliseconds
-  function chooseMoveByAI(gameTree, ai) {
-    $('#message').text('Now thinking...');
-    setTimeout(
-      function () {
-        var start = Date.now();
-        var newGameTree = O.force(ai.findTheBestMove(gameTree).gameTreePromise);
-        var end = Date.now();
-        var delta = end - start;
-        setTimeout(
-          function () {
-            shiftToNewGameTree(newGameTree);
-          },
-          Math.max(minimumDelayForAI - delta, 1)
-        );
-      },
-      1
-    );
-  }
-
   function showWinner(board) {
     var r = O.judge(board);
-    $('#message').text(
-      r === 0 ?
+    $("#myModal").attr("style", "display:block");
+    $("#myModal").find(".msg").text(r === 0 ?
       'The game ends in a draw.' :
-      'The winner is ' + (r === 1 ? O.BLACK : O.WHITE) + '.'
-    );
+      'The winner is ' + (r === 1 ? O.BLACK : O.WHITE) + '.');
   }
 
   var playerTable = {};
@@ -117,17 +90,11 @@
   }
 
   function blackPlayerType() {
-    return $('#black-player-type').val();
+    return "human";
   }
 
   function whitePlayerType() {
     return "human";
-  }
-
-  function swapPlayerTypes() {
-    var t = $('#black-player-type').val();
-    $('#black-player-type').val($('#white-player-type').val()).change();
-    $('#white-player-type').val(t).change();
   }
 
   function shiftToNewGameTree(gameTree) {

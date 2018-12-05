@@ -2,9 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Othello JS</title>
-    <!-- <link href="vendor/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="vendor/twitter-bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"> -->
+    <title>김승훈</title>
     <link href="./css/app.css" rel="stylesheet">
   </head>
   <body>
@@ -12,17 +10,32 @@
 
     <div id="main" class="container">
       <div id="game-board"></div>
-      <div id="message"></div>
-      <div id="console"></div>
+      <!-- <div id="message"></div>
+      <div id="console"></div> -->
       <div id="stats"></div>
-      <div id="preference-pane">
-         <div>
-        </div>
+      <div id="preference-pane"></div>
+    </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">                                                              
+        <h1 class="msg"></h1>
+
+        <button class="mainBtn" onClick="window.location.reload()">다시하기</button>
+        <button class="mainBtn" onClick="location.href='../index.html'">게임 선택</button>
       </div>
+
     </div>
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="./js/othello.js"></script>
     <script src="./js/app.js"></script>
+
+    <div class="btnArea">
+      <!--Restart버튼-->
+      <button type="button" class="btn" onClick="window.location.reload()">다시하기</button>
+    </div>
   </body>
 </html>
