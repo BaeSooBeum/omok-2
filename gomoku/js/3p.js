@@ -198,6 +198,8 @@ function addOmok(turn, xPos, yPos, xDir, yDir){
 
 function undo() {
 	boardArray[latestX][latestY] = 0;
-	turn = 4 - turn;
+	if (turn == 1) turn = 3;
+	else if (turn == 2) turn = 1;
+	else if (turn == 3) turn = 2; //turn change
     updateBoard();
 }
